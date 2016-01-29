@@ -8,11 +8,15 @@ public class LevelGeneration : MonoBehaviour
     public List<GameObject> listOfPlatforms;
     public GameObject initialPlatform;
 
-     [SerializeField] float platformSpeed = 1;
-    [SerializeField] float initialWaitTime = 3;
+	bool isPlayerCharging = false;
+    [SerializeField] float platformSpeed = 1;
+	float originalPlatformSpeed = 1;
+	public float initialWaitTime = 3;
 
-    [SerializeField] float minPlatformWidth = 3;
-    [SerializeField] float maxPlatformWidth = 6;
+	public float minPlatformWidth = 3;
+	public float maxPlatformWidth = 6;
+
+	float chargeSpeed;
 
     BoxCollider2D destructionBoundary;
 
@@ -37,6 +41,7 @@ public class LevelGeneration : MonoBehaviour
     // public function to change how often the platfroms spawn
     public void changePlatformFrequency(float newWaitTime)
     {
+		initialWaitTime = newWaitTime;
         CancelInvoke("createNewPlatform");
         InvokeRepeating("createNewPlatform", newWaitTime, newWaitTime);
     }
@@ -46,10 +51,15 @@ public class LevelGeneration : MonoBehaviour
         minPlatformWidth = min;
         maxPlatformWidth = max;
     }
+
+	public void changePlatformSpeed(float value)
+	{
+		platformSpeed = value;
+	}
     //public function to change the platform material
-    public void changePlatformMaterial(Material material)
+    public void changePlatformSprite(Sprite sprite)
     {
-        initialPlatform.GetComponent<Renderer>().material = material;
+        initialPlatform.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
     //creates a new platform
@@ -78,8 +88,9 @@ public class LevelGeneration : MonoBehaviour
         for (int i = 0; i < listOfPlatforms.Count; ++i)
         {
             // increments by the value platformSpeed
-            listOfPlatforms[i].transform.position = new Vector2(listOfPlatforms[i].transform.position.x - (platformSpeed / 20), listOfPlatforms[i].transform.position.y);
-        }
+			listOfPlatforms[i].transform.position = new Vector2(listOfPlatforms[i].transform.position.x - (platformSpeed * (isPlayerCharging ? chargeSpeed : 1) / 20), listOfPlatforms[i].transform.position.y);
+			Debug.Log (isPlayerCharging);
+		}
     }
 
     // delete the platform referenced
@@ -109,4 +120,17 @@ public class LevelGeneration : MonoBehaviour
     {
         listOfPlatforms.Add(platform);
     }
+
+	public void Charge(float chargeTime)
+	{
+		chargeSpeed = chargeTime;
+		isPlayerCharging = true;
+		Invoke ("stopCharge", chargeTime);
+	}
+
+	void stopCharge()
+	{
+		isPlayerCharging = false;
+		//changePlatformSpeed (originalPlatformSpeed);
+	}
 }

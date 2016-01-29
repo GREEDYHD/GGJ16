@@ -8,7 +8,7 @@ public class JumpingScript : MonoBehaviour {
 	[SerializeField]
 	private bool isGrounded;
 	[SerializeField]
-	private float jumpForce = 4;
+	private float jumpForce = 500;
 	
 
 	private Rigidbody2D m_RB;
@@ -25,15 +25,14 @@ public class JumpingScript : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Space) && numberOfJumps < 2)
 		{
 			m_RB.velocity = Vector2.zero;
-			m_RB.AddForce(Vector2.up * jumpForce / 100);
+			m_RB.AddForce(Vector2.up * jumpForce);
 			numberOfJumps++;
 		}
 
 		if (m_RB.velocity.y < 0)
-
 		{
 			//change animation to grounded
-			Debug.Log ("Ground Animation Play");
+			//Debug.Log ("Ground Animation Play");
 		}
 	}
 
@@ -42,7 +41,6 @@ public class JumpingScript : MonoBehaviour {
 		if(collider.gameObject.tag == ("Ground"))
 		{
 			numberOfJumps = 0f;
-			jumpForce = 4;
 		}
 	}
 }

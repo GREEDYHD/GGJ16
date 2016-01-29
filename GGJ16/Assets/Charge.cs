@@ -5,12 +5,19 @@ public class Charge : MonoBehaviour
 {
 	Rigidbody2D mRigidBody2D;
 	public GameObject mAimArrow;
+	public GameObject mLevelScroller;
+	
 
 	public float mChargeForce;
 	[SerializeField]
 	Vector2 mChargeDirection = new Vector2(1,0);
 
 	public float mAimAngle;
+	float chargeUpTime = 0;
+	float maxChargeUpTime = 3;
+	float chargeDuration = 1;
+	bool isCharging = false;
+	bool canCharge = false;
 
 	[SerializeField]
 	int angleStep = 0;
@@ -21,30 +28,34 @@ public class Charge : MonoBehaviour
 
 	void Update ()
 	{
+//		angleStep = Mathf.Clamp (angleStep,-45,45);
+//
+//		Vector2 dir = new Vector2 (transform.position.x, transform.position .y) - mChargeDirection;
+//		float angle = Mathf.Atan2 (dir.y, dir.x) * Mathf.Rad2Deg;
+//		mAimArrow.transform.rotation = Quaternion.AngleAxis (angleStep * mAimAngle, Vector3.forward);
+//
+//		mChargeDirection = new Vector2(Mathf.Sin (angle),Mathf.Cos (angle));
+//
 
-		if (Input.GetKey(KeyCode.UpArrow))
+		if (isCharging)
 		{
-			angleStep++;
+			chargeDuration -= Time.deltaTime;
+			if(chargeDuration <= 0)
+			{
+				chargeDuration = 1;
+				isCharging = false;
+			}
 		}
 
-		if (Input.GetKey (KeyCode.DownArrow))
+		if (Input.GetKey (KeyCode.RightControl))
 		{
-			angleStep--;
+			chargeUpTime += Time.deltaTime;
+			chargeUpTime = Mathf.Clamp(chargeUpTime, 0, maxChargeUpTime);
 		}
 
-		//angleStep = Mathf.Clamp (angleStep,-45,45);
-
-		Vector2 dir = new Vector2 (transform.position.x, transform.position .y) - mChargeDirection;
-		float angle = Mathf.Atan2 (dir.y, dir.x) * Mathf.Rad2Deg;
-		mAimArrow.transform.rotation = Quaternion.AngleAxis (angleStep * mAimAngle, Vector3.forward);
-
-		mChargeDirection = new Vector2(Mathf.Sin (angle),Mathf.Cos (angle));
-
-		if (Input.GetKeyDown (KeyCode.RightControl))
+		if (Input.GetKeyUp (KeyCode.RightControl))
 		{
-			mRigidBody2D.AddForce(mChargeDirection * mChargeForce);
-			Debug.Log (mChargeDirection);
+			mLevelScroller.GetComponent<LevelGeneration>().Charge(chargeUpTime);
 		}
-
 	}
 }
