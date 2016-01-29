@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Charge : MonoBehaviour
 {
 	Rigidbody2D mRigidBody2D;
 	public GameObject mAimArrow;
 	public GameObject mLevelScroller;
-	
+
+	public Slider mSlider;
 
 	public float mChargeForce;
 	[SerializeField]
@@ -55,7 +57,9 @@ public class Charge : MonoBehaviour
 
 		if (Input.GetKeyUp (KeyCode.RightControl))
 		{
-			mLevelScroller.GetComponent<LevelGeneration>().Charge(chargeUpTime);
+			mLevelScroller.GetComponent<LevelGeneration>().Charge(chargeUpTime * 3);
+			chargeUpTime = 0;
 		}
+		mSlider.value = chargeUpTime;
 	}
 }

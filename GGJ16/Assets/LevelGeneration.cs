@@ -128,6 +128,11 @@ public class LevelGeneration : MonoBehaviour
 		Invoke ("stopCharge", chargeTime);
 	}
 
+	public float GetChargeTime()
+	{
+		return chargeSpeed;
+	}
+
 	void stopCharge()
 	{
 		isPlayerCharging = false;
