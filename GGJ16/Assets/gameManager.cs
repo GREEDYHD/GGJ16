@@ -34,7 +34,7 @@ public class gameManager : MonoBehaviour
         calculateTime();
 
         // if the player has reached the circle boundary
-        if(score > circleBoundaries[circle])
+        if(score > circleBoundaries[circle] && circle < 7)
         {
             updateCicle();
         }
@@ -48,7 +48,7 @@ public class gameManager : MonoBehaviour
 
     void calculateScore()
     {
-        score += 5;
+        score += 50;
         scoreText.text = "Score " + score.ToString();
     }
 
@@ -62,8 +62,8 @@ public class gameManager : MonoBehaviour
         //level.changePlatformSprite(platformSprites[circle]);
 
         // reduce the platforms frequency and size
-        //level.changePlatformFrequency(level.initialWaitTime - 0.5);
-        //level.changePlatformWidthRange(level.minPlatformWidth - 0.5, level.maxPlatformWidth - 0.5);
+        level.changePlatformFrequency(level.initialWaitTime - 0.5f);
+        level.changePlatformWidthRange(level.minPlatformWidth - 0.5f, level.maxPlatformWidth - 0.5f);
 
     }
 
